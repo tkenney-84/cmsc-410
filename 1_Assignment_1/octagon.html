@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>A1-Kenney-Octagon</title>
+        <link rel="stylesheet" type="text/css" href=".shared.css"></link>
+        <script id="vertex-shader" type="x-shader/x-vertex">
+            attribute vec4 vPosition;
+            void main() {
+                gl_Position = vPosition;
+            }
+        </script>
+        <script id="fragment-shader" type="x-shader/x-fragment">
+            precision mediump float;
+            uniform vec4 u_FragColor;
+            void main() {
+                gl_FragColor = u_FragColor;
+            }
+        </script>
+        <script type="text/javascript" src=".shared.js"></script>
+        <script type="text/javascript" src="octagon.js"></script>
+    </head>
+    <body>
+
+        <h1>Canvas</h1>
+
+        <canvas id="gl-canvas" width="512px" height="512px">
+            <h1 class="error-text">Error</h1>
+            <p class="error-text">
+                Your browser does not support the HTML5 canvas element.
+            </p>
+        </canvas>
+
+        <br/>
+
+        <!-- Place the button in an h1 element for the margins.
+             Purely aesthetic. -->
+        <h1>
+            <button class="reload-button" onclick="reloadPage()">
+                Reload Page
+            </button>
+        </h1>
+    </body>
+</html>

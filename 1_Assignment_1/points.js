@@ -1,43 +1,73 @@
+/**
+ * @fileOverview Renders a canvas and its elements with WebGL.
+ *
+ * This file assumes that the following files are included in the HTML file:
+ * .shared.js
+ */
 
 var gl;
-var points;
+const numPoints = 10;
 
-window.onload = function init()
-{
-    var canvas = document.getElementById( "gl-canvas" );
+/**
+ * This function is called when the HTML file is loaded. It initializes the
+ * WebGL canvas and renders the provided canvas elements.
+ * @returns { void }
+ */
+window.onload = function init() {
 
-    gl = WebGLUtils.setupWebGL( canvas );
-    if ( !gl ) { alert( "WebGL isn't available" ); }
+  // Set up the WebGL canvas. If WebGL isn't available, display an error
+  // message for the user.
+  gl = WebGLUtils.setupWebGL();
+  if (!gl) {
+    showErrorText(
+      "WebGL isn't available on your browser or with your current computer."
+    );
+  }
 
-    var vertices = new Float32Array([-1, 1, -1, -1, 1, -1, 1, 1]);
+  // An array of points to be rendered on the canvas.
+  var points = [];
 
-    //  Configure WebGL
+  // Fill the points array with coordinates.
+  for (var i = 0; i < numPoints; i++) {
+    var coordinate = random2DCoordinate();
+    points.push(coordinate.x, coordinate.y);
+  }
 
-    gl.viewport( 0, 0, canvas.width, canvas.height);
-    gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
+  // Convert the points array to a Float32Array.
+  const finalArray = new Float32Array(points);
 
-    //  Load shaders and initialize attribute buffers
-    
-    var program = initShaders( gl, "vertex-shader", "fragment-shader" );
-    gl.useProgram( program );
-    
-    // Load the data into the GPU
-    var bufferId = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-    gl.bufferData( gl.ARRAY_BUFFER,vertices, gl.STATIC_DRAW );
+  // Set up the canvas.
+  const dimensions = canvasDimensions();
+  gl.viewport(0, 0, dimensions.width, dimensions.height);
+  gl.clearColor(1.0, 1.0, 1.0, 1.0);
 
-    // Associate out shader variables with our data buffer
-    
-    var vPosition = gl.getAttribLocation( program, "vPosition" );
-    gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vPosition );
+  // Initialize the shaders.
+  var program = initShaders(gl, "vertex-shader", "fragment-shader");
+  gl.useProgram(program);
 
-    render();
+  // Set the fragment color with a uniform.
+  var u_FragColor = gl.getUniformLocation(program, 'u_FragColor');
+  gl.uniform4f(u_FragColor, 0.0, 0.0, 0.0, 1.0);
+
+  // Load the data into the GPU.
+  var bufferId = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, bufferId);
+  gl.bufferData(gl.ARRAY_BUFFER, finalArray, gl.STATIC_DRAW);
+
+  // Associate the shader variables with the buffer data.
+  var vPosition = gl.getAttribLocation(program, "vPosition");
+  gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vPosition);
+
+  // Render the points.
+  render();
 };
 
-
 function render() {
-    gl.clear( gl.COLOR_BUFFER_BIT );
-    // gl.drawArrays( gl.TRIANGLES, 0, 3 );
-    gl.drawArrays( gl.LINE_LOOP, 0, 4 );
+
+  // Clear the canvas.
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // Draw the points.
+  gl.drawArrays(gl.POINTS, 0, numPoints);
 }

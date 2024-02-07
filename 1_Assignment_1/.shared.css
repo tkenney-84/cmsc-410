@@ -1,20 +1,24 @@
-#reload-button {
-    margin-left:auto;
-    margin-right:auto;
+body {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.reload-button {
+    padding:10px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    font-weight: bold;
+}
+
+.error-text {
+    color:red;
+    text-align: center;
 }
 
 #gl-canvas {
-    width:512px !important;
-    height:512px !important;
-}
-
-body {
-    width:100% !important;
-    height:100% !important;
-}
-
-#error-text {
-    color:red;
-    font-size: 20px;
-    text-align: center;
+    border: 1px solid black;
 }
