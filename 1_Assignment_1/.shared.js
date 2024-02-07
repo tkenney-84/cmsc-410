@@ -1,31 +1,4 @@
 /**
- * @fileoverview This file contains functions every webgl program will need
- * a version of one way or another.
- *
- * Instead of setting up a context manually it is recommended to
- * use. This will check for success or failure. On failure it
- * will attempt to present an approriate message to the user.
- *
- *       gl = WebGLUtils.setupWebGL(canvas);
- *
- * For animated WebGL apps use of setTimeout or setInterval are
- * discouraged. It is recommended you structure your rendering
- * loop like this.
- *
- *       function render() {
- *         window.requestAnimFrame(render, canvas);
- *
- *         // do rendering
- *         ...
- *       }
- *       render();
- *
- * This will call your rendering function up to the refresh rate
- * of your display but will stop rendering if your app is not
- * visible.
- */
-
-/**
  * @fileOverview This file is a refactored, functional combination of the
  * initShaders.js, webgl-utils.js, and MV.js files from the provided triangle
  * example.
@@ -364,9 +337,11 @@ function initShaders(gl, vertexShaderId, fragmentShaderId) {
  */
 function randomNumber(roundResult = false, maximumValue = 1, minimumValue = 0) {
   if (roundResult) {
-    return Math.round(Math.random() * maximumValue) + minimumValue;
+    return Math.min(
+        Math.round(Math.random() * maximumValue) + minimumValue, maximumValue
+      );
   } else {
-    return Math.random() * maximumValue + minimumValue;
+    return Math.min(Math.random() * maximumValue + minimumValue, maximumValue);
   }
 }
 

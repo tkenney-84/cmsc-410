@@ -5,11 +5,18 @@
  * .shared.js
  */
 
+// In case you have a hard time finding the circles, limit their radii here.
+const maximumPercentageRadius = 1.00;
+const minimumPercentageRadius = 0.01;
+
+// Control blending here.
+const blending = true;
+
 var gl;
+const numCircles = 10;
 const numSides = 360; // Also number of triangles needed.
-const numPoints = numSides * 3; // Three points per triangle.
-const originPixelPoint = { x: 0.0, y: 0.0 };
-const percentageRadius = 0.5;
+// three points per triangle per circle.
+const numPoints = numSides * numCircles * 3;
 const triangleThetaInRadians = (360 / numSides) * (Math.PI / 180);
 
 /**
@@ -32,31 +39,39 @@ window.onload = function init() {
   var points = [];
   var colors = [];
 
-  // Fill the points array with coordinates.
-  for (var i = 0; i < numSides; i++) {
-    const triangle = Math.floor(i);
-    const point1AngleInRadians = triangleThetaInRadians * triangle;
-    const point2AngleInRadians = triangleThetaInRadians * (triangle + 1);
-    var point1 = {
-        x: originPixelPoint.x + percentageRadius * Math.cos(point1AngleInRadians),
-        y: originPixelPoint.y + percentageRadius * Math.sin(point1AngleInRadians)
-    };
-
-    var point2 = {
-        x: originPixelPoint.x + percentageRadius * Math.cos(point2AngleInRadians),
-        y: originPixelPoint.y + percentageRadius * Math.sin(point2AngleInRadians)
-    };
-
-    points.push(originPixelPoint.x, originPixelPoint.y);
-    points.push(point1.x, point1.y);
-    points.push(point2.x, point2.y);
+  for (var i = 0; i < numCircles; i++) {
 
     // Add the color for the triangle.
-    const color = randomRGBAColor();
-    colors.push(color.red, color.green, color.blue, color.alpha);
-    colors.push(color.red, color.green, color.blue, color.alpha);
-    colors.push(color.red, color.green, color.blue, color.alpha);
+    var color = randomRGBAColor();
+    var percentageRadius =
+    randomNumber(false, maximumPercentageRadius, minimumPercentageRadius);
+    var originPixelPoint = random2DCoordinate();
+    var alphaValue = 1 - (1 / numCircles) * i;
 
+    // Fill the points array with coordinates.
+    for (var j = 0; j < numSides; j++) {
+        var triangle = Math.floor(j);
+        var point1AngleInRadians = triangleThetaInRadians * triangle;
+        var point2AngleInRadians = triangleThetaInRadians * (triangle + 1);
+        var point1 = {
+            x: originPixelPoint.x + percentageRadius * Math.cos(point1AngleInRadians),
+            y: originPixelPoint.y + percentageRadius * Math.sin(point1AngleInRadians)
+        };
+
+        var point2 = {
+            x: originPixelPoint.x + percentageRadius * Math.cos(point2AngleInRadians),
+            y: originPixelPoint.y + percentageRadius * Math.sin(point2AngleInRadians)
+        };
+
+        points.push(originPixelPoint.x, originPixelPoint.y);
+        points.push(point1.x, point1.y);
+        points.push(point2.x, point2.y);
+
+        colors.push(color.red, color.green, color.blue, alphaValue);
+        colors.push(color.red, color.green, color.blue, alphaValue);
+        colors.push(color.red, color.green, color.blue, alphaValue);
+
+    }
   }
 
   // Set up the canvas.
@@ -85,6 +100,11 @@ window.onload = function init() {
   var a_Color = gl.getAttribLocation(program, 'a_Color');
   gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(a_Color);
+
+  if (blending) {
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  }
 
   // Render the points.
   render();
