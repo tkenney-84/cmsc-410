@@ -2,12 +2,14 @@
 <html>
     <head>
         <title>A1-Kenney-Circle</title>
+        <script type="text/stylesheet" src=".shared.css"></script>
         <script type="text/javascript" src=".shared.js"></script>
         <script type="text/javascript" src="circle.js"></script>
     </head>
     <body>
-        <canvas id="circle-canvas" width="100%" height="100%">
-        Your browser does not support the HTML5 canvas element.
+        <canvas id="gl-canvas">
+            <p id="error-text">Your browser does not support the HTML5 canvas element.</p>
         </canvas>
+        <button id="reload-button" onclick="reloadPage()">Reload Page</button>
     </body>
 </html>
