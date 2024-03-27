@@ -1,0 +1,26 @@
+body, body * {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#webgl-canvas {
+    border: 1px solid black;
+}
+
+.middle * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.center * {
+    text-align: center;
+}
+
+table {
+    min-width: 25%;
+}
+
+p {
+    margin:none !important;
+}
